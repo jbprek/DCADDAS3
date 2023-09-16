@@ -6,14 +6,14 @@ load("/data/customer.json")
 customer1Df.printSchema
 //.schema(customerDfSchema_ST)
 // .schema(customerDfSchema_DDL)
-// COMMAND ----------
 
 
-// COMMAND ----------
+
+
 
 import org.apache.spark.sql.types._
 
-// COMMAND ----------
+
 
 val stuctType = StructType(
 Array(
@@ -45,7 +45,7 @@ val customer2Df = spark.read.format("json").
 
 customer2Df.printSchema
 
-// COMMAND ----------
+
 val ddlString =
   """
     |address_id INT,
@@ -73,26 +73,6 @@ val customer3Df = spark.read.format("json").
   schema(ddlString).
   load("/data/customer.json")
 
-// COMMAND ----------
 
 customer3Df.printSchema
-
-// COMMAND ----------
-
-customerDf.printSchema
-
-// COMMAND ----------
-
 customerDf.printSchema()
-
-// COMMAND ----------
-
-display(customerDf)
-
-// COMMAND ----------
-
-// MAGIC %fs head /data/customer.json
-
-// COMMAND ----------
-
-// MAGIC %fs ls /FileStore/tables/learning

@@ -1,11 +1,8 @@
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
 
-
 // Original Schema
-
 customerDf.printSchema
-
 
 /* Use of withColumnRenamed(String,String) */
 val renDf = customerDf.withColumnRenamed("email_address", "mail")
