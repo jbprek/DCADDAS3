@@ -1,0 +1,11 @@
+employee_id,first_name,last_name,department_id,salary,languages
+1,John,Doe,101,60000,[en,fr]
+2,Jane,Smith,102,55000,[en,es]
+3,Michael,Johnson,101,62000,[en,es]
+4,Emily,Williams,103,58000,[en,it]
+5,William,Brown,102,59000,[en,gr]
+6,Susan,Davis,103,63000,[en,ch]
+7,James,Miller,101,61000,[en,jp]
+8,Linda,Anderson,102,57000,[en,de]
+9,David,Wilson,103,64000,[en,ru]
+10,Sarah,Moore,101,63000,[en,it]

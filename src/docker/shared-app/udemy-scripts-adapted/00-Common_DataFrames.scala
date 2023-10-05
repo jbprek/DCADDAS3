@@ -74,6 +74,55 @@ val gradesDF = spark.read.format("csv").
   option("header", "true").option("inferSchema", "true").
   load("/data/grades.csv")
 
+val employeesDF = spark.read.
+  option("header", "true").option("inferSchema", "true").
+    csv("/data/employees.csv")
+
+
+val employeeSchema = StructType(Seq(
+  StructField("employee_id",IntegerType,true),
+  StructField("first_name",StringType,true),
+  StructField("last_name",StringType,true),
+  StructField("department_id",IntegerType,true),
+  StructField("salary", IntegerType, true),
+  StructField("languages",ArrayType(StringType),true)
+))
+
+val employeesDF = spark.read.
+  option("header", "true").schema(employeeSchema).
+  csv("/data/employees.csv")
+
+
+import org.apache.spark.sql.{SparkSession, DataFrame}
+import org.apache.spark.sql.types.{StructType, StructField, StringType, IntegerType}
+
+object WriteListToDataFrame {
+  def main(args: Array[String]): Unit = {
+    // Create a Spark session
+    val spark = SparkSession.builder()
+      .appName("WriteListToDataFrame")
+      .master("local[*]") // Replace with your cluster configuration
+      .getOrCreate()
+
+    // Define the schema for the DataFrame
+    val schema = new StructType()
+      .add(StructField("id", IntegerType, nullable = false))
+      .add(StructField("name", StringType, nullable = true))
+
+    // Create a native Scala List
+    val data = List((1, "John"), (2, "Jane"), (3, "Mike"))
+
+    // Convert the List to a DataFrame
+    val df: DataFrame = spark.createDataFrame(data).toDF("id", "name")
+
+    // Show the DataFrame
+    df.show()
+
+    // Stop the Spark session
+    spark.stop()
+  }
+}
+
 
 customerDf.printSchema
 webSalesDf.printSchema

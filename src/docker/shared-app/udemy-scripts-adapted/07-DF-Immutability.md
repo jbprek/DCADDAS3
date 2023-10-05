@@ -20,7 +20,7 @@
 ### Console
 - show
 
-### Tranform to language native objects
+### Transform to language native objects
 - take
 - takeAsList
 - collect

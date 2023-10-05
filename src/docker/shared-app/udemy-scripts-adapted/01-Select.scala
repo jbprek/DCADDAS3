@@ -1,7 +1,7 @@
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
 /* # Select by column name string */
-// Not possible to access array elemaent
+// Not possible to access array element
 val dfS1 = customerDf.select("firstname", "lastname", "demographics", "demographics.credit_rating", "demographics.income_range")
 dfS1.printSchema
 dfS1.show(false)
