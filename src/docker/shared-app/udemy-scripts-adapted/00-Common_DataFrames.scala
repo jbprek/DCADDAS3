@@ -65,9 +65,7 @@ val personDF = spark.read.
   csv("/data/persons.csv")
 
 
-val invoiceDF = spark.read.format("csv").
-  option("header", "true").option("inferSchema", "true").
-  load("/data/invoices.csv")
+
 
 
 val gradesDF = spark.read.format("csv").
@@ -130,4 +128,4 @@ addressDf.printSchema
 itemDf.printSchema
 personDF.printSchema
 demoDf.printSchema
-invoiceDF.printSchema
+
