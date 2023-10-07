@@ -6,6 +6,9 @@ val salesDF = spark.read.format("csv").
   option("header", "true").option("inferSchema", "true").
   load("/data/sales-simple.csv")
 
+salesDF.createOrReplaceTempView("sales")
+
+//
 salesDF.printSchema
 
 salesDF.show

@@ -19,6 +19,16 @@ val df = inDf.selectExpr("to_date(dt) as dt", "to_timestamp(dtm) as dtm")
 df.printSchema
 df.show
 
+/* Current Date curdate() OR  current_date()*/
+df.withColumn("now", curdate()).select("now").show
+// OR
+df.withColumn("now", current_date()).select("now").show
+/* Current Timestamp now() OR current_timestamp() */
+df.withColumn("now", now()).select("now").show(false)
+// OR
+df.withColumn("now", current_timestamp()).select("now").show(false)
+
+
 /* Convert format Dates to String */
 
 
@@ -36,7 +46,8 @@ df.show
 
 /* Compare Timestamps */
 
-/* To Unix EPOCH  */
+/* To Unix EPOCH to_unix_timestamp */
+df.withColumn("now", to_unix_timestamp(now())).select("now").show(false)
 
 /* From Unix EPOCH */
 

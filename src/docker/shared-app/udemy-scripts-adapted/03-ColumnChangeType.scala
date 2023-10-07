@@ -23,6 +23,8 @@ customerDf.select($"address_id", $"birthdate").printSchema
 * - decimal,
 * - date,
 * - timestamp
+*
+* SOS NOTE that to is CASE INSENSITIVE
 * */
 val ct1Df = customerDf.select($"address_id".cast("long"), $"birthdate".cast("string"))
 ct1Df.printSchema
