@@ -6,8 +6,9 @@ val list = List((1,"john", true),(2, "Peter",false))
 
 val df = list.toDF("id", "name","married")
 // Alternative
+val df = spark.createDataset(list).toDF("id", "name","married")
+// Note the following works as well
 val df = spark.createDataFrame(list).toDF("id", "name","married")
-
 df.show(false)
 df.printSchema
 
