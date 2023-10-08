@@ -1,4 +1,4 @@
-employee_id,first_name,last_name,department_id,salary
+id,first_name,last_name,department_id,salary
 1,John,Doe,101,60000
 2,Jane,Smith,102,55000
 3,Michael,Johnson,101,62000

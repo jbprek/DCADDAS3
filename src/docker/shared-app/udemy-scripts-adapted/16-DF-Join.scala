@@ -8,34 +8,35 @@ val dptDF = spark.read.format("csv").option("header", "true").option("inferSchem
 dptDF.createOrReplaceTempView("dept")
 
 /*
-+-------------+---------------+-------------+
-|department_id|department_name|     location|
-+-------------+---------------+-------------+
-|          101|             HR|     New York|
-|          102|        Finance|      Chicago|
-|          103|    Engineering|San Francisco|
-|          104|          Sales|  Los Angeles|
-|          105|      Marketing|       Boston|
-+-------------+---------------+-------------+
-
-
 scala> empDF.show
-+-----------+----------+---------+-------------+------+
-|employee_id|first_name|last_name|department_id|salary|
-+-----------+----------+---------+-------------+------+
-|          1|      John|      Doe|          101| 60000|
-|          2|      Jane|    Smith|          102| 55000|
-|          3|   Michael|  Johnson|          101| 62000|
-|          4|     Emily| Williams|          103| 58000|
-|          5|   William|    Brown|          102| 59000|
-|          6|     Susan|    Davis|          103| 63000|
-|          7|     James|   Miller|          101| 61000|
-|          8|     Linda| Anderson|          102| 57000|
-|          9|     David|   Wilson|          103| 64000|
-|         10|     Sarah|    Moore|          101| 63000|
-|         11|  Laurence|    Smith|         NULL|  NULL|
-+-----------+----------+---------+-------------+------+
++---+----------+---------+-------------+------+
+| id|first_name|last_name|department_id|salary|
++---+----------+---------+-------------+------+
+|  1|      John|      Doe|          101| 60000|
+|  2|      Jane|    Smith|          102| 55000|
+|  3|   Michael|  Johnson|          101| 62000|
+|  4|     Emily| Williams|          103| 58000|
+|  5|   William|    Brown|          102| 59000|
+|  6|     Susan|    Davis|          103| 63000|
+|  7|     James|   Miller|          101| 61000|
+|  8|     Linda| Anderson|          102| 57000|
+|  9|     David|   Wilson|          103| 64000|
+| 10|     Sarah|    Moore|          101| 63000|
+| 11|  Laurence|    Smith|         NULL|  NULL|
++---+----------+---------+-------------+------+
+
+scala> dptDF.show
++---+---------------+-------------+
+| id|department_name|     location|
++---+---------------+-------------+
+|101|             HR|     New York|
+|102|        Finance|      Chicago|
+|103|    Engineering|San Francisco|
+|104|          Sales|  Los Angeles|
+|105|      Marketing|       Boston|
++---+---------------+-------------+
  */
+
 
 /* INNER  Join */
 // SQL
@@ -43,8 +44,15 @@ spark.sql(
   """
     | SELECT emp.first_name, emp.last_name, dept.department_name
     | from emp INNER JOIN dept
-    | ON emp.department_id = dept.department_id
+    | ON emp.department_id = dept.id
     |""".stripMargin).show
+
+// DF
+val joinExpr = empDF.col("department_id") === dptDF.col("id")
+val joinType = "inner"
+
+empDF.join(dptDF, joinExpr, joinType).
+  select(empDF("first_name"),empDF("last_name"), dptDF("department_name")).show()
 
 /* LEFT  Join, include employees without departments */
 // SQL
@@ -52,8 +60,14 @@ spark.sql(
   """
     | SELECT emp.first_name, emp.last_name, dept.department_name
     | from emp LEFT OUTER JOIN dept
-    | ON emp.department_id = dept.department_id
+    | ON emp.department_id = dept.id
     |""".stripMargin).show
+// DF
+val joinExpr = empDF.col("department_id") === dptDF.col("id")
+val joinType = "left"
+
+empDF.join(dptDF, joinExpr, joinType).
+  select(empDF("first_name"),empDF("last_name"), dptDF("department_name")).show()
 
 /* RIGHT  Join, include depts without employees */
 // SQL
@@ -61,15 +75,23 @@ spark.sql(
   """
     | SELECT emp.first_name, emp.last_name, dept.department_name
     | from emp RIGHT OUTER JOIN dept
-    | ON emp.department_id = dept.department_id
+    | ON emp.department_id = dept.id
     |""".stripMargin).show
+
+// DF
+val joinExpr = empDF.col("department_id") === dptDF.col("id")
+val joinType = "right"
+
+empDF.join(dptDF, joinExpr, joinType).
+  select(empDF("first_name"),empDF("last_name"), dptDF("department_name")).show()
+
 /* FULL (OUTER)  Join, include employees with no dept and depts without employees */
 // SQL
 spark.sql(
   """
     | SELECT emp.first_name, emp.last_name, dept.department_name
     | from emp FULL OUTER JOIN dept
-    | ON emp.department_id = dept.department_id
+    | ON emp.department_id = dept.id
     |""".stripMargin).show
 
 /* CROSS Join (Cartesian Product), include combinations of employees and depts
@@ -82,13 +104,15 @@ spark.sql(
     | from emp CROSS JOIN dept
     |""".stripMargin).show
 
+
+
 /* SEMI  TODO Join  returns values from the left side of the relation that has a match with the right */
 
 spark.sql(
   """
     | SELECT  emp.department_id
     | from emp SEMI JOIN dept
-    | ON emp.department_id = dept.department_id
+    | ON emp.department_id = dept.id
     | ORDER BY emp.department_id
     |""".stripMargin).show
 /*
@@ -110,10 +134,10 @@ spark.sql(
 
 spark.sql(
   """
-    | SELECT  dept.department_id
+    | SELECT   dept.id
     | from dept SEMI JOIN emp
-    | ON dept.department_id = emp.department_id
-    | ORDER BY dept.department_id
+    | ON  dept.id = emp.department_id
+    | ORDER BY  dept.id
     |""".stripMargin).show
 /*
 +-------------+
@@ -130,7 +154,7 @@ spark.sql(
   """
     | SELECT emp.employee_id
     | from emp ANTI JOIN dept
-    | ON emp.department_id = dept.department_id
+    | ON emp.department_id = dept.id
     | ORDER BY emp.employee_id
     |""".stripMargin).show
 /*
@@ -143,10 +167,10 @@ spark.sql(
 
 spark.sql(
   """
-    | SELECT dept.department_id
+    | SELECT  dept.id
     | from dept ANTI JOIN emp
-    | ON emp.department_id = dept.department_id
-    | ORDER BY dept.department_id
+    | ON emp.department_id = dept.id
+    | ORDER BY  dept.id
     |""".stripMargin).show
 /*
 +-------------+

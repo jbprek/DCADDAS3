@@ -1,4 +1,4 @@
-department_id,department_name,location
+id,department_name,location
 101,HR,New York
 102,Finance,Chicago
 103,Engineering,San Francisco
