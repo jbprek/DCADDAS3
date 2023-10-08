@@ -8,59 +8,78 @@ import org.apache.spark.sql.types._
  * 3. Windowing Aggregations
  */
 
-
+val salesDF = spark.read.format("csv").option("header", "true").option("inferSchema", "true").load("/data/sales-simple.csv")
+salesDF.createOrReplaceTempView("sales")
 /* Examples schema salesDF
 root
  |-- orderId: integer (nullable = true)
- |-- customerId: string (nullable = true)
+ |-- customer: string (nullable = true)
  |-- country: string (nullable = true)
- |-- productId: string (nullable = true)
- |-- date: date (nullable = true)
+ |-- product: string (nullable = true)
+ |-- dt: date (nullable = true)
 
-Temporary view sales
-
-Definitions in 00-Dataset-Sales-Simple.scala
+Temporary view : sales
  */
-
-
-/* Number of customers per country */
-
-
+salesDF.show
 /* Number of customers per country */
 // SQL Solution
 spark.sql("""
-            | select country, count(distinct customerId) num_customers
+            | select country, count(distinct customer) num_customers
             | from sales
             | group by country
             | order by num_customers desc
-            |""".stripMargin).show(53,false)
+            |""".stripMargin).show()
 // DF API
 salesDF.groupBy("country" ).agg(
-  countDistinct("customerId").as("num_customers")
-).show(53,false)
+  countDistinct("customer").as("num_customers")
+).sort($"num_customers".desc).
+show()
+
+
+/* Number of orders per country and product */
+// SQL Solution
+spark.sql("""
+            | select country, product, count(orderId) num_orders
+            | from sales
+            | group by country, product
+            | order by product, country, num_orders desc,
+            |""".stripMargin).show()
+
+spark.sql("""
+            | select country, product, count(orderId) num_orders
+            | from sales
+            | group by country, product
+            | order by  num_orders desc,  country, product
+            |""".stripMargin).show()
+// DF API
+salesDF.groupBy("country" ).agg(
+  countDistinct("customer").as("num_customers")
+).sort($"num_customers".desc).
+  show()
+
 
 // DF API refactored for readability
-val numCustomers = countDistinct("customerId").as("num_customers")
+val numCustomers = countDistinct("customer").as("num_customers")
 salesDF.groupBy("country").agg(numCustomers).show(53,false)
 
 
 /* Num orders per country, product having more than 1 order */
 // SQL Solution
 spark.sql("""
-            | select country, productId, count(*) as num_orders
+            | select country, product, count(*) as num_orders
             | from sales
-            | group by country, productId
+            | group by country, product
             | having num_orders > 1
-            | order by num_orders desc, productId, country
-            |""".stripMargin).show(50)
+            | order by num_orders desc, product, country
+            |""".stripMargin).show()
 
 
 spark.sql("""
-            | select customerId, count(*) as num_orders
+            | select customer, count(*) as num_orders
             | from sales
-            | group by customerId
-            | order by customerId
-            |""".stripMargin).show(51)
+            | group by customer
+            | order by customer
+            |""".stripMargin).show()
 
 /* Grouping Aggregations */
 val summaryDF = invoiceDF.groupBy("Country", "InvoiceNo").agg(
