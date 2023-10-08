@@ -47,6 +47,9 @@ salesDF.show
  */
 
 /* SIMPLE Aggregations */
+//  SOS note that unlikely most of the other functions that expect Column argument,
+//  aggregate functions have overloaded methods that support both String and Column
+//  for a column argument and can be mixed
 salesDF.select(
   count("*").as("Count *"),
   sum("amount").as("TotalAmount"),
@@ -56,10 +59,25 @@ salesDF.select(
   countDistinct("customer").as("NumCustomers"),
 ).show()
 
-//  SOS note that unlikely most of the other functions that expect Column argument,
-//  aggregate functions have overloaded methods that support both String and Column
-//  for a column argument.
+// OR
+salesDF.select(
+  count($"*").as("Count *"),
+  sum($"amount").as("TotalAmount"),
+  round(avg($"amount"),2).as("AvgAmount"),
+  countDistinct($"Country").as("NumCountries"),
+  countDistinct($"product").as("NumProducts"),
+  countDistinct($"customer").as("NumCustomers"),
+).show()
 
+// SOS aggregate functions with String and Column arguments can be mixed
+salesDF.select(
+  count("*").as("Count *"),
+  sum($"amount").as("TotalAmount"),
+  round(avg("amount"),2).as("AvgAmount"),
+  countDistinct($"Country").as("NumCountries"),
+  countDistinct("product").as("NumProducts"),
+  countDistinct($"customer").as("NumCustomers"),
+).show()
 
 // Usign expr
 salesDF.selectExpr(

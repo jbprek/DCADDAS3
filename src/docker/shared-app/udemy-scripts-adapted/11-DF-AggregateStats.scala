@@ -25,6 +25,7 @@ invoiceDF.select(
   avg($"UnitPrice").as("AvgPrice"),
   countDistinct($"InvoiceNo").as("CountDistinct")
 ).show()
+// SOS You can mix
 
 // Usign expr
 invoiceDF.selectExpr(
