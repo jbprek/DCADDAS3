@@ -18,7 +18,7 @@ customerDf.select($"address_id", $"birthdate").printSchema
 * - short,
 * - int,
 * - long,
-* -  float,
+* - float,
 * - double,
 * - decimal,
 * - date,

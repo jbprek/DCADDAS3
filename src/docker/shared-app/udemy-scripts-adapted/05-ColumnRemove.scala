@@ -1,6 +1,7 @@
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
 
+// SOS drop accepts both String and Column arguments
 // Drop using column name strings, No failure on unkown columns
 customerDf.drop("address_id", "birth_country", "lkajkdjf").columns
 
