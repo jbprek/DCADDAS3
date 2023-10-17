@@ -1,0 +1,11 @@
+GradeID,StudentID,Course,Grade
+1,1,Math,92.5
+2,1,English,88.0
+3,2,Math,78.5
+4,2,English,94.0
+5,3,Math,86.0
+6,3,English,90.5
+7,4,Math,95.5
+8,4,English,89.0
+9,5,Math,88.0
+10,5,English,91.5
