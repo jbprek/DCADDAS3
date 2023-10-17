@@ -11,6 +11,12 @@ val df = spark.createDataset(list).toDF("id", "name","married")
 val df = spark.createDataFrame(list).toDF("id", "name","married")
 df.show(false)
 df.printSchema
+/*
+root
+ |-- id: integer (nullable = false)
+ |-- name: string (nullable = true)
+ |-- married: boolean (nullable = false)
+ */
 
 /*
  * Create a Dataframe from Row List using a schema
